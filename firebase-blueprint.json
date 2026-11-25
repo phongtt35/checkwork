@@ -1,0 +1,452 @@
+{
+  "entities": {
+    "Student": {
+      "title": "Student",
+      "description": "Sinh viên được import từ danh sách Excel hoặc Admin thêm thủ công.",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email",
+          "minLength": 5,
+          "maxLength": 150,
+          "pattern": "^[a-z0-9._%+\\-]+@[a-z0-9.\\-]+\\.[a-z]{2,}$",
+          "description": "Email Google của sinh viên (chữ thường)."
+        },
+        "fullName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "description": "Họ và tên đầy đủ của sinh viên."
+        },
+        "groupCode": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40,
+          "description": "Mã nhóm sinh viên."
+        },
+        "uid": {
+          "type": "string",
+          "maxLength": 128,
+          "description": "Firebase Auth UID được liên kết khi sinh viên đăng nhập lần đầu."
+        },
+        "photoURL": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Ảnh đại diện từ Google Account."
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Trạng thái kích hoạt cho phép đăng nhập."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Thời điểm tạo bản ghi sinh viên."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Thời điểm cập nhật gần nhất."
+        },
+        "lastLoginAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Thời điểm đăng nhập gần nhất."
+        }
+      },
+      "required": ["email", "fullName", "groupCode", "active", "createdAt", "updatedAt"]
+    },
+    "DailyCheckin": {
+      "title": "DailyCheckin",
+      "description": "Bản ghi check-in đầu ngày và checkout cuối ngày của sinh viên theo từng ngày.",
+      "type": "object",
+      "properties": {
+        "studentId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "ID tài liệu sinh viên trong collection students."
+        },
+        "studentUid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "description": "Firebase Auth UID của sinh viên."
+        },
+        "studentEmail": {
+          "type": "string",
+          "format": "email",
+          "minLength": 5,
+          "maxLength": 150,
+          "description": "Email sinh viên."
+        },
+        "studentName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "description": "Họ tên sinh viên."
+        },
+        "groupCode": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40,
+          "description": "Mã nhóm tại thời điểm check-in."
+        },
+        "dateKey": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 10,
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+          "description": "Ngày làm việc theo định dạng YYYY-MM-DD."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["checked_in", "checked_out"],
+          "description": "Trạng thái phiên làm việc trong ngày."
+        },
+        "tasks": {
+          "type": "array",
+          "description": "Danh sách công việc dự kiến và kết quả cuối ngày (từ 1 đến 30 mục)."
+        },
+        "totalTasks": {
+          "type": "integer",
+          "description": "Tổng số công việc trong ngày."
+        },
+        "completedCount": {
+          "type": "integer",
+          "description": "Số công việc đã hoàn thành."
+        },
+        "incompleteCount": {
+          "type": "integer",
+          "description": "Số công việc chưa hoàn thành."
+        },
+        "dailyNote": {
+          "type": "string",
+          "maxLength": 1000,
+          "description": "Ghi chú thêm của sinh viên."
+        },
+        "checkInAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Thời gian check-in đầu ngày (server timestamp)."
+        },
+        "checkOutAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Thời gian checkout cuối ngày (server timestamp)."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Thời điểm cập nhật gần nhất."
+        }
+      },
+      "required": [
+        "studentId",
+        "studentUid",
+        "studentEmail",
+        "studentName",
+        "groupCode",
+        "dateKey",
+        "status",
+        "tasks",
+        "totalTasks",
+        "completedCount",
+        "incompleteCount",
+        "checkInAt",
+        "updatedAt"
+      ]
+    },
+    "AdminUser": {
+      "title": "AdminUser",
+      "description": "Tài khoản quản trị viên được cấp quyền.",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email",
+          "minLength": 5,
+          "maxLength": 150,
+          "description": "Email Google của quản trị viên."
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "description": "Tên hiển thị quản trị viên."
+        },
+        "role": {
+          "type": "string",
+          "enum": ["admin"],
+          "description": "Vai trò quản trị."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Thời điểm cấp quyền."
+        }
+      },
+      "required": ["email", "displayName", "role", "createdAt"]
+    },
+    "AdminInvite": {
+      "title": "AdminInvite",
+      "description": "Danh sách email quản trị viên được mời trước khi đăng nhập.",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email",
+          "minLength": 5,
+          "maxLength": 150,
+          "description": "Email Google được cấp quyền quản trị."
+        },
+        "addedBy": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 150,
+          "description": "Email người thêm."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Thời điểm tạo lời mời."
+        }
+      },
+      "required": ["email", "addedBy", "createdAt"]
+    },
+    "SystemConfig": {
+      "title": "SystemConfig",
+      "description": "Cấu hình hệ thống và nhật ký reset dữ liệu.",
+      "type": "object",
+      "properties": {
+        "organizationName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "description": "Tên lớp học / dự án / đơn vị."
+        },
+        "academicTerm": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60,
+          "description": "Học kỳ hoặc đợt thực tập."
+        },
+        "totalResets": {
+          "type": "integer",
+          "description": "Số lần đã reset dữ liệu công việc."
+        },
+        "lastResetAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Thời điểm reset gần nhất."
+        },
+        "allowCustomStudentTasks": {
+          "type": "boolean",
+          "description": "Cho phép sinh viên tự nhập việc ngoài danh sách nhóm hay không."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Thời điểm cập nhật cấu hình."
+        }
+      },
+      "required": ["organizationName", "academicTerm", "totalResets", "updatedAt"]
+    },
+    "AdminSettings": {
+      "title": "AdminSettings",
+      "description": "Cấu hình email quản trị viên chính (chỉ Admin được đọc/ghi).",
+      "type": "object",
+      "properties": {
+        "primaryAdminEmail": {
+          "type": "string",
+          "format": "email",
+          "minLength": 5,
+          "maxLength": 150,
+          "description": "Email quản trị viên mặc định có thể cấu hình."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Thời điểm cập nhật."
+        }
+      },
+      "required": ["primaryAdminEmail", "updatedAt"]
+    },
+    "GroupTask": {
+      "title": "GroupTask",
+      "description": "Đầu việc cần làm của từng nhóm do Admin tạo hoặc import để sinh viên chủ động nhặt.",
+      "type": "object",
+      "properties": {
+        "groupCode": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40,
+          "description": "Mã nhóm được giao công việc."
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300,
+          "description": "Tên đầu việc cần làm."
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Mô tả chi tiết công việc hoặc tiêu chí nghiệm thu."
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["high", "medium", "low"],
+          "description": "Độ ưu tiên của công việc."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["open", "claimed", "completed"],
+          "description": "Trạng thái nhặt việc của nhóm."
+        },
+        "assignedToStudentId": {
+          "type": "string",
+          "maxLength": 128,
+          "description": "ID sinh viên đang nhận việc."
+        },
+        "assignedToUid": {
+          "type": "string",
+          "maxLength": 128,
+          "description": "Auth UID của sinh viên đang nhận việc."
+        },
+        "assignedToName": {
+          "type": "string",
+          "maxLength": 120,
+          "description": "Họ tên sinh viên đang nhận việc."
+        },
+        "claimedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Thời điểm sinh viên nhặt việc."
+        },
+        "completedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Thời điểm hoàn thành công việc."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Thời điểm tạo công việc."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Thời điểm cập nhật gần nhất."
+        }
+      },
+      "required": ["groupCode", "title", "description", "priority", "status", "createdAt", "updatedAt"]
+    },
+    "StudentBinding": {
+      "title": "StudentBinding",
+      "description": "Ánh xạ Auth UID tới studentId và groupCode đã xác thực phục vụ kiểm tra phân quyền nhóm.",
+      "type": "object",
+      "properties": {
+        "studentId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "ID bản ghi sinh viên."
+        },
+        "groupCode": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40,
+          "description": "Mã nhóm hiện tại của sinh viên."
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Trạng thái kích hoạt."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Thời điểm đồng bộ."
+        }
+      },
+      "required": ["studentId", "groupCode", "active", "updatedAt"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Nhật ký thao tác quản trị (import Excel, import việc nhóm, reset dữ liệu).",
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": ["import_students", "import_tasks", "reset_checkins", "update_config"],
+          "description": "Loại thao tác."
+        },
+        "actorUid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "description": "UID của quản trị viên."
+        },
+        "actorEmail": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 150,
+          "description": "Email của quản trị viên."
+        },
+        "details": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 400,
+          "description": "Mô tả chi tiết thao tác."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Thời điểm thực hiện."
+        }
+      },
+      "required": ["action", "actorUid", "actorEmail", "details", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/students/{studentId}": {
+      "schema": { "$ref": "#/entities/Student" },
+      "description": "Danh sách sinh viên được import từ Excel và phân nhóm."
+    },
+    "/studentBindings/{uid}": {
+      "schema": { "$ref": "#/entities/StudentBinding" },
+      "description": "Ánh xạ UID sinh viên sang mã nhóm để xác thực quyền truy cập việc nhóm."
+    },
+    "/groupTasks/{taskId}": {
+      "schema": { "$ref": "#/entities/GroupTask" },
+      "description": "Danh sách việc cần làm theo từng nhóm để sinh viên chủ động nhặt."
+    },
+    "/checkins/{checkinId}": {
+      "schema": { "$ref": "#/entities/DailyCheckin" },
+      "description": "Lịch sử check-in/check-out công việc theo ngày (mỗi sinh viên 1 bản ghi/ngày)."
+    },
+    "/admins/{adminId}": {
+      "schema": { "$ref": "#/entities/AdminUser" },
+      "description": "Danh sách quản trị viên theo UID."
+    },
+    "/adminInvites/{inviteId}": {
+      "schema": { "$ref": "#/entities/AdminInvite" },
+      "description": "Email được cấp quyền quản trị."
+    },
+    "/systemConfig/{configId}": {
+      "schema": { "$ref": "#/entities/SystemConfig" },
+      "description": "Cấu hình hệ thống chung (không bị xóa khi reset công việc)."
+    },
+    "/adminSettings/{settingId}": {
+      "schema": { "$ref": "#/entities/AdminSettings" },
+      "description": "Cấu hình email quản trị viên chính (chỉ Admin truy cập)."
+    },
+    "/auditLogs/{logId}": {
+      "schema": { "$ref": "#/entities/AuditLog" },
+      "description": "Nhật ký thao tác quản trị."
+    }
+  }
+}

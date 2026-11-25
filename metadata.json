@@ -1,0 +1,6 @@
+{
+  "name": "CheckWork — Quản lý Check-in Công việc Sinh viên",
+  "description": "Hệ thống quản lý check-in/check-out công việc sinh viên theo nhóm với bảng điều khiển quản trị, nhập Excel và đồng bộ thời gian thực.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
